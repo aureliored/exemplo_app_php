@@ -85,7 +85,76 @@ class ProductRepository
         }
        
         echo $body;
+    }
 
-        die;
+    public function new($data)
+    {
+        $api = __API__;
+        $uri = $api['default']['host'] . 'produto/';
+        try {
+            $request = $this->client->request('POST', $uri, [
+                'json' => $data,
+            ]);
+            $body = (string) $request->getBody();
+        } catch (RequestException $e) {
+            echo Psr7\str($e->getRequest());
+            if ($e->hasResponse()) {
+                echo Psr7\str($e->getResponse());
+            }
+           
+        }
+       
+        $response = json_decode($body);
+        if(!$response->status){
+            return $response;
+        }
+
+        return $response->data;
+    }
+    
+    public function edit($data)
+    {
+        $api = __API__;
+        $uri = $api['default']['host'] . 'produto/?id=' . $data['id'];
+        try {
+            $request = $this->client->request('PUT', $uri, [
+                'json' => $data,
+            ]);
+            $body = (string) $request->getBody();
+        } catch (RequestException $e) {
+            echo Psr7\str($e->getRequest());
+            if ($e->hasResponse()) {
+                echo Psr7\str($e->getResponse());
+            }
+           
+        }
+        $response = json_decode($body);
+        if(!$response->status){
+            return $response;
+        }
+
+        return $response->data;
+    }
+   
+    public function remove($data)
+    {
+        $api = __API__;
+        $uri = $api['default']['host'] . 'produto/?id=' . $data['id'];
+        try {
+            $request = $this->client->request('DELETE', $uri, []);
+            $body = (string) $request->getBody();
+        } catch (RequestException $e) {
+            echo Psr7\str($e->getRequest());
+            if ($e->hasResponse()) {
+                echo Psr7\str($e->getResponse());
+            }
+           
+        }
+        $response = json_decode($body);
+        if(!$response->status){
+            return $response;
+        }
+
+        return $response->data;
     }
 }
