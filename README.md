@@ -1,2 +1,2 @@
 # exemplo_app_php
-Exemplo de uma aplicação com comunicação com api desenvolvida em php puro
+Exemplo de uma aplicação desenvolvida em php puro com comunicação com api 

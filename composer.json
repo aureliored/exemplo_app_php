@@ -1,6 +1,6 @@
 {
-    "name": "aureliored/exemplo_api_php",
-    "description": "API desenvolvida em PHP puro",
+    "name": "aureliored/exemplo_app_php",
+    "description": "Exemplo de uma aplicação com comunicação com api desenvolvida em php puro",
     "type": "project",
     "license": "GPLv3",
     "authors": [
@@ -12,8 +12,11 @@
     "autoload": {
         "psr-4": {
             "Application\\": "src/Application",
-            "Product\\": "src/Product"
+            "Product\\": "src/Product",
+            "Admin\\": "src/Admin"
         }
     },
-    "require": {}
+    "require": {
+        "guzzlehttp/guzzle": "^6.3"
+    }
 }
