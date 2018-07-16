@@ -31,8 +31,10 @@ class Route
 	private function add($file)
 	{	
 		$routes = require $file;
-		foreach($routes as $method => $route ){
-			$this->on($method,$route);
+		foreach($routes as $method => $data ){
+			foreach($data as $route) {
+				$this->on($method, $route);
+			}
 		}	
 	}
 

@@ -2,19 +2,20 @@
 
 namespace Application\Controller;
 
-
+use Application\Service\Render;
 
 class ApplicationController
 {
-    private $router;
+    private $render;
+
+    function __construct()
+	{
+        $this->render = new Render();
+    }
     
     public function error404Action()
     {
-        echo json_encode([
-            "status" => false,
-            "code" => 404,
-            "message" => "Pagina não encontrada.",
-            ]);
-        return $this;
+        $this->render->render('');
+        return true;
     }
 }
