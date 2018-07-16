@@ -3,8 +3,7 @@
     <div class='col-8'>
         <div class="card">
 
-            <img class="card-img-top" data-src="holder.js/100px180/" alt="100%x180" style="height: 180px; width: 100%; display: block;" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22286%22%20height%3D%22180%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20286%20180%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_16490b52989%20text%20%7B%20fill%3Argba(255%2C255%2C255%2C.75)%3Bfont-weight%3Anormal%3Bfont-family%3AHelvetica%2C%20monospace%3Bfont-size%3A14pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_16490b52989%22%3E%3Crect%20width%3D%22286%22%20height%3D%22180%22%20fill%3D%22%23777%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%22107.18333435058594%22%20y%3D%2296.3%22%3E286x180%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E" data-holder-rendered="true">
-            <?php  ?>
+            <img class="card-img-top" style=" width: 100%; display: block;" src="<?=$produto->photo ??  __BASEURL__ . "/public/img/product/no-image.jpeg"?>" />
             <div class="card-body">
                 <h5 class="card-title"><?=$data['produto']->name?></h5>
                 <p class="card-title"><?=$data['produto']->description?></p>
@@ -13,35 +12,104 @@
     </div>
     <div class='col-4'>
         <div class="card">
-            <div class="card-body">
-                <p class="card-text product-value"><?=$data['produto']->value?></p>
+            <div class="card-body <?=empty($data['produto']->promotion_value) ? '' : 'promotion-active'?>">
+                <p class="card-text product-value">Valor: <?=$data['produto']->value?></p>
                 <p class="card-text promotion-value"><?=$data['produto']->promotion_value ?? ''?></p>
-                <a href="#" class="btn btn-success">Comprar</a>
-                <form action="<?=__BASEURL__ . 'frete';?>" target="_blank" method="post">
+                <p class="card-text frete"></p>
+                <p class="card-text prazo"></p>
+                <form id="frete-form" action="<?=__BASEURL__ . 'frete';?>" target="_blank" method="post">
                     <input type="hidden" name="weight" value="<?=$data['produto']->weight ?? ''?>" />
                     <input type="hidden" name="length" value="<?=$data['produto']->length ?? ''?>" />
                     <input type="hidden" name="height" value="<?=$data['produto']->height ?? ''?>" />
                     <input type="hidden" name="width" value="<?=$data['produto']->width ?? ''?>" />
                     <input type="hidden" name="value" value="<?=$data['produto']->value_clear ?? ''?>" />
-                    <div class="form-group">
+                    <div class="form-group row">
                         <div class='col-12'>
-                            <select name='method' class="form-control">
+                            <select name='method' id="method" class="form-control">
                                 <option value=''>Selecione o envio</option>
                                 <?php foreach($data['shipmentMethod'] as $method => $code) : ?>
                                 <option value='<?=$code?>'><?=$method?></option>
                                 <?php endforeach; ?>
-                            </select>
+                            </select><br/>
                         </div>
-                        <div class='col-12'>
-                            <input type="text" value='' class="form-control" name='postcode' />
+                        <div class='col-6'>
+                            <input type="text" value='' class="form-control cep" name='postcode' /><br/>
+                        </div>
+                        <div class='col-5'>
                             <input type="submit" value="Calcular" class="btn btn-default"/>
-
                         </div>
                     </div>
                 </form>
-                 <a href="<?=__BASEURL__ . 'details/?id=' . $data['produto']->id?>" class="btn btn-primary">Detalhes</a>
+                <!-- Modal HTML embedded directly into document -->
+                <div id="comprar" class="modal">
+                    <p>Obrigado pela preferencia, insira as informações a baixo e entraremos em contato</p>
+                    <form enctype="multipart/form-data" id="comprar" action="<?=__BASEURL__?>produto/comprar/" method="POST" style="background: #f5f5f5;padding: 15px;border: 1px solid #a1a1a1;border-radius: 10px;">
+                        <input type="hidden" name="id" id="id" value="<?=$data['produto']->id ?? ''?>" />
+                        <div class="form-group row">
+                            <label for="name" class="col-sm-4 col-form-label">Nome</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" id="name" required name="name" value="">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="email" class="col-sm-4 col-form-label">E-mail</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" id="email" name="email" value=""/>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-12">
+                                <a href="#" class="btn btn-danger" rel="modal:close">Cancelar</a>
+                                <input type="submit" class="btn btn-success"  value="Confirmar"/>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Link to open the modal -->
+                <p><a href="#comprar" class="btn btn-success" rel="modal:open">Comprar</a></p>
             </div>
         </div>
     </div>
 </div>
+<script>
+(function($){
+    $("#frete-form").submit(function(e) {
+        $.ajax({
+            type: "POST",
+            url: '<?=__BASEURL__ . 'frete';?>',
+            data: $("#frete-form").serialize(),
+            success: function(data)
+            {
+                var response = $(data)
+                var valor = response.find('Valor')[0].innerHTML;
+                var prazo = response.find('PrazoEntrega')[0].innerHTML;
+                
+                $('.frete').html($('#method option:selected').html() + ': R$ ' + valor);
+                $('.prazo').html(prazo + ' dias uteis.');
+            }
+        });
+
+        e.preventDefault();
+    });
+    $("#comprar").submit(function(e) {
+        $.ajax({
+            type: "POST",
+            url: '<?=__BASEURL__ . 'produto/comprar/';?>',
+            data: $("#comprar").serialize(),
+            success: function(data)
+            {
+               if(data){
+                   alert('Compra realizada com sucesso.');
+                   window.location = '<?=__BASEURL__;?>';
+                }else{
+                    alert('Infelizmente não conseguimos computar sua compra. Tente novamente mais tarde.');
+               }
+            }
+        });
+
+        e.preventDefault();
+    });
+})(jQuery)
+</script>
     

@@ -25,5 +25,12 @@ return [
                 'getShipmentAction',
             ],
         ],
+        [
+            'path' => 'produto/comprar/',
+            'callback' => [
+                "Product\\Controller\\ProductController",
+                'sendMailAction',
+            ],
+        ],
     ],
 ];

@@ -48,7 +48,7 @@ class Render
     }
 
     function getTemplate(){
-        $title = 'Teste';
+        $title = 'Ecommerce';
 		ob_start();
         include $this->path . '\\' . $this->base;
         $html =  ob_get_clean();

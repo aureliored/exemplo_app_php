@@ -96,7 +96,7 @@ class ProductController
 
         $return = $repository->new($_POST);
         $redirect = __BASEURL__ . 'admin/?mensagem=' . $return->message ;
-        
+
         header("location: $redirect");
     }
 
@@ -114,5 +114,22 @@ class ProductController
         $return = $repository->remove($_POST);
         $redirect = __BASEURL__ . 'admin/?mensagem=' . $return->message ;
         header("location: $redirect");
+    }
+
+    public function sendMailAction()
+    {
+        $to = 'aureliomoreirared@gmail.com';
+        $subject = 'Você tem uma nova compra';
+        $message = '<p>Segue a baixo as informações da compra.</p>';
+        $message .= '<p>Nome do cliente: ' . $_POST['name'] . '</p>';
+        $message .= '<p>E-mail do cliente: ' . $_POST['email'] . '</p>';
+        $message .= '<p>link com as informações do produto: <a href="' . __BASEURL__ . 'details/?id=' . $_POST['id'] . '">Click aqui</a></p>';
+        $from = 'aureliomoreirared@gmail.com';
+        $headers = sprintf("From: %s\r\nReply-To: %s", $from, $from);
+        if(mail($to, $subject, $message, $headers)){
+            echo true;
+        }else{
+            echo false;
+        }
     }
 }
