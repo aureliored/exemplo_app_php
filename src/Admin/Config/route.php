@@ -15,6 +15,21 @@ return [
                 'getAction',
             ],
         ],
+        [
+            'path' => 'admin/produto/novo/',
+            'callback' => [
+                "Admin\\Controller\\ProductController",
+                'newAction',
+            ],
+        ],
+        [
+            'path' => 'admin/produto/deletar/',
+            'callback' => [
+                "Admin\\Controller\\ProductController",
+                'deleteAction',
+            ],
+        ],
+
        
        
     ],
@@ -26,22 +41,18 @@ return [
                 'saveAction',
             ],
         ],
-    ],
-    'put' => [
         [
-            'path' => 'admin/produto/',
+            'path' => 'admin/produto/editar/',
             'callback' => [
                 "Admin\\Controller\\ProductController",
                 'editAction',
             ],
         ],
-    ],
-    'delete' => [
         [
-            'path' => 'admin/produto/',
+            'path' => 'admin/produto/remove/',
             'callback' => [
                 "Admin\\Controller\\ProductController",
-                'deleteAction',
+                'removeAction',
             ],
         ],
     ],

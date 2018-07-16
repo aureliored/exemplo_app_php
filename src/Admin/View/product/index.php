@@ -1,4 +1,9 @@
-<h1>produtos</h1>   
+<h1>Produtos <a href="<?=__BASEURL__ . 'admin/produto/novo/';?>" class="btn btn-success">Novo</a></h1>   
+<?php if(!empty($data['message'])):?>
+<div class="alert alert-dark" role="alert">
+  <?=$data['message'];?>
+</div>
+<?php endif;?>
 <div class='row'>
     <div class='col-12'>
         <div class="table-responsive">
@@ -31,8 +36,8 @@
                         <td><?=$produto->promotion_end ?? '-'?></td>
                         <td>
                             <div class="btn-group" role="group" aria-label="Basic example">
-                                <button type="button" class="btn btn-primary">Editar</button>
-                                <button type="button" class="btn btn-danger">Remover</button>
+                                <a  href="<?=__BASEURL__?>admin/produto/?id=<?=$produto->id?>" class="btn btn-primary">Editar</a>
+                                <a  href="<?=__BASEURL__?>admin/produto/deletar/?id=<?=$produto->id?>" class="btn btn-danger">Remover</a>
                             </div>
                         </td>
                     </tr>
